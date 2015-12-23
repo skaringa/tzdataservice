@@ -1,0 +1,59 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant"
+         name="tzdataservice"
+         default="resolve"
+         basedir=".">
+
+  <property name="main.class" value="de.kompf.tzdata.rest.TzDataService"/>
+  <property name="jar.file" value="${basedir}/${ant.project.name}.jar"/>
+  <property name="ivy.jar.dir" value="/usr/share/java" />
+  
+  <property name="src.dir" value="${basedir}/src" />
+  <property name="lib.dir" value="${basedir}/lib" />
+  <property name="build.dir" value="${basedir}/bin" />
+
+  <path id="compile.classpath">
+    <fileset dir="${lib.dir}" includes="*.jar" />
+  </path>
+
+  <target name="load-ivy">
+    <path id="ivy.lib.path">
+      <fileset dir="${ivy.jar.dir}" includes="ivy.jar" />
+    </path>
+      <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant"
+         classpathref="ivy.lib.path" />
+  </target>
+
+  <target name="init" depends="load-ivy">
+    <mkdir dir="${build.dir}" />
+  </target>
+
+  <target name="clean">
+    <delete dir="${build.dir}" />
+  </target>
+
+  <target name="resolve" depends="load-ivy" description="retrieve dependencies with ivy">
+    <ivy:retrieve />
+  </target>
+
+  <target name="compile" depends="init, resolve" description="compile">
+    <javac srcdir="${src.dir}"
+           destdir="${build.dir}"
+           target="1.7"
+           fork="true"
+           includeantruntime="false"
+           classpathref="compile.classpath"
+           nowarn="true"
+           debug="false"
+           encoding="UTF-8" />
+  </target>
+
+  <target name="package" depends="compile" description="Package jar file">
+    <jar destfile="${jar.file}">
+         <manifest>
+             <attribute name="Main-Class" value="${main.class}"/>
+         </manifest>
+         <fileset dir="${build.dir}"/>
+         <zipgroupfileset dir="${lib.dir}" includes="*.jar"/>
+     </jar>
+  </target>
+</project>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ivy-module version="2.0">
+    <info organisation="de.kompf" module="tzdata"/>
+    <configurations>
+        <conf name="default" visibility="public"/>
+        <conf name="master" visibility="public"/>
+        <conf name="runtime" visibility="public"/>
+    </configurations>
+    <dependencies>
+        <dependency org="org.geotools" name="gt-shapefile" rev="14.1"/>
+        <dependency org="com.sun.jersey" name="jersey-bundle" rev="1.19" conf="master"/>
+        <dependency org="javax.ws.rs" name="jsr311-api" rev="1.1.1" conf="master"/>
+    </dependencies>
+</ivy-module>

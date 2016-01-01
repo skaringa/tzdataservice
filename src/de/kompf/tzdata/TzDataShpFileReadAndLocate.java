@@ -26,6 +26,7 @@ import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
 
 import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.Point;
 
@@ -36,6 +37,7 @@ import com.vividsolutions.jts.geom.Point;
  */
 public class TzDataShpFileReadAndLocate {
 
+  private static final String TZID_ATTR = "TZID";
   private SimpleFeatureSource featureSource;
   private FilterFactory2 filterFactory;
   private GeometryFactory geometryFactory;
@@ -48,8 +50,6 @@ public class TzDataShpFileReadAndLocate {
    *          If a filename is given, then read the input from it instead of
    *          stdin.
    * 
-   * @throws IOException
-   * @throws CQLException
    */
   public static void main(String[] args) throws IOException {
     // Download from http://efele.net/maps/tz/world/tz_world.zip
@@ -118,31 +118,57 @@ public class TzDataShpFileReadAndLocate {
    * @param y
    *          Latitude in degrees.
    * @return Timezone Id.
-   * @throws IOException
    */
   public String process(double x, double y) throws IOException {
-    String result = "";
-
     Point point = geometryFactory.createPoint(new Coordinate(x, y));
     Filter pointInPolygon = filterFactory.contains(filterFactory.property("the_geom"), filterFactory.literal(point));
 
     SimpleFeatureCollection features = featureSource.getFeatures(pointInPolygon);
-
+    SimpleFeature result;
+    
     // search in coastal waters
-    if (features.size() == 0) {
+    if (features.isEmpty()) {
       // find polygon within distance 0.1 deg
       Filter dWithin = filterFactory.dwithin(filterFactory.property("the_geom"), filterFactory.literal(point),
           0.1, "");
       features = featureSource.getFeatures(dWithin);
+
+      if (features.size() > 1) {
+        // if more than one polygon was found, then choose the nearest one
+        result = selectMinDistance(features, point);
+      } else {
+        result = selectFirst(features);
+      }
+    } else {
+      result = selectFirst(features);
     }
 
+    return result == null ? "" : (String) result.getAttribute(TZID_ATTR);
+  }
+
+  private SimpleFeature selectFirst(SimpleFeatureCollection features) {
+    SimpleFeature first = null;
     try (FeatureIterator<SimpleFeature> iterator = features.features()) {
       if (iterator.hasNext()) {
-        SimpleFeature feature = iterator.next();
-        String tzid = (String) feature.getAttribute("TZID");
-        result = tzid;
+        first = iterator.next();
       }
     }
-    return result;
+    return first;
+  }
+
+  private SimpleFeature selectMinDistance(SimpleFeatureCollection features, Point point) {
+    SimpleFeature nearest = null;
+    double minDistance = Double.MAX_VALUE;
+    try (FeatureIterator<SimpleFeature> iterator = features.features()) {
+      while (iterator.hasNext()) {
+        SimpleFeature feature = iterator.next();
+        double distance = point.distance((Geometry) feature.getDefaultGeometry());
+        if (distance < minDistance) {
+          minDistance = distance;
+          nearest = feature;
+        }
+      }
+    }
+    return nearest;
   }
 }

@@ -38,6 +38,12 @@ public class TzDataTest {
   }
 
   @Test
+  public void testNearest() throws IOException {
+    assertEquals("Europe/Rome", tzdata.process(13.72467, 45.64861));
+    assertEquals("Europe/Ljubljana", tzdata.process(13.70132, 45.55637));
+  }
+
+  @Test
   public void testOffShore() throws IOException {
     assertEquals("", tzdata.process(-23.73047, 47.93107));
   }

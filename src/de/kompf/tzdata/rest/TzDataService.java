@@ -39,10 +39,13 @@ public class TzDataService {
    */
   public static void main(String[] args) throws IOException {
     if (args.length != 1) {
-      System.err.println("Usage: java " + TzDataService.class.getName() + " path/to/tz_world.shp");
+      System.err.println("Usage: java [OPTION] -jar tzdataservice.jar path/to/tz_world.shp");
+      System.err.println("  OPTIONS");
+      System.err.println("    -Dtzdata.extend=true  extend search to coastal waters (default false)");
       System.exit(1);
     }
-    tzdata = new TzDataShpFileReadAndLocate();
+    boolean extend = "true".equals(System.getProperty("tzdata.extend", "false"));
+    tzdata = new TzDataShpFileReadAndLocate(extend);
     tzdata.openInputShapefile(args[0]);
 
     HttpServer server = createHttpServer(28100, "/");

@@ -8,13 +8,13 @@ prerequisites
 
 * Java JDK 1.7, Ant, Ivy
 
-* Download tz\_world.zip from <http://efele.net/maps/tz/> and unpack it into an empty directory.
+* Download timezones.shapefile.zip from <https://github.com/evansiroky/timezone-boundary-builder/releases/> and unpack it into an empty directory.
 
 building
 --------
 
         ant package
-    
+
 
 running the service
 -------------------
@@ -39,7 +39,7 @@ The blog post [Determine time zone with GeoTools from shapefiles](https://www.mk
 License
 -------
 
-Copyright 2015 Martin Kompf
+Copyright 2015, 2017 Martin Kompf
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 

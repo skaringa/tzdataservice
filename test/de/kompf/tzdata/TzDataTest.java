@@ -14,10 +14,11 @@ import org.junit.Test;
 public class TzDataTest {
 
   private static TzDataShpFileReadAndLocate tzdata;
+  private static String shpfile;
 
   @BeforeClass
   public static void setUpBeforeClass() throws Exception {
-    final String shpfile = System.getProperty("user.home") + "/projects/tz/dist/combined_shapefile.shp";
+    shpfile = System.getProperty("user.home") + "/projects/tz/dist/combined-shapefile-with-oceans.shp";
     tzdata = new TzDataShpFileReadAndLocate();
     tzdata.openInputShapefile(shpfile);
   }
@@ -45,7 +46,13 @@ public class TzDataTest {
 
   @Test
   public void testOffShore() throws IOException {
-    assertEquals("", tzdata.process(-23.73047, 47.93107));
+    if (shpfile.contains("with-oceans")) {
+      // if combined-shapefile-with-oceans.shp
+      assertEquals("Etc/GMT+2", tzdata.process(-23.73047, 47.93107));
+    } else {
+      // else combined-shapefile.shp contains no international waters
+      assertEquals("", tzdata.process(-23.73047, 47.93107));
+    }
   }
 
 }

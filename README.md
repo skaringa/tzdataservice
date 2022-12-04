@@ -1,14 +1,14 @@
 tzdataservice
 =============
 
-Java program and service to provide timezone names for given latitude and longitude based on data from an ESRI shapefile.
+Java web service to provide timezone names for given latitude and longitude based on data from an ESRI shapefile.
 
 prerequisites
 -------------
 
-* Java JDK 1.7, Ant, Ivy
+* Java JDK 11, Ant, Ivy
 
-* Download timezones.shapefile.zip from <https://github.com/evansiroky/timezone-boundary-builder/releases/> and unpack it into an empty directory.
+* Download timezones-with-oceans.shapefile.zip from <https://github.com/evansiroky/timezone-boundary-builder/releases/> and unpack it into an empty directory.
 
 building
 --------
@@ -19,7 +19,7 @@ building
 running the service
 -------------------
 
-        java -jar tzdataservice.jar /path/to/tz_world.shp
+        java -jar tzdataservice.jar /path/to/combined-shapefile-with-oceans.shp
 
 
 querying the REST service
@@ -39,7 +39,7 @@ The blog post [Determine time zone with GeoTools from shapefiles](https://www.mk
 License
 -------
 
-Copyright 2015, 2017 Martin Kompf
+Copyright 2015, 2022 Martin Kompf
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 

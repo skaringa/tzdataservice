@@ -4,6 +4,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -12,11 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.junit.BeforeClass;
 import org.junit.Test;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
 
 /**
  * JUnit test for {@link TzDataService}.
@@ -31,6 +31,7 @@ public class TzDataConcurrentTest {
 
     private double xstart, ystart, xstop, ystop;
     private String expectedTz;
+    private HttpClient client;
 
     public Worker(double xstart, double ystart, double xstop, double ystop, String expectedTz) {
       this.xstart = xstart;
@@ -38,6 +39,7 @@ public class TzDataConcurrentTest {
       this.xstop = xstop;
       this.ystop = ystop;
       this.expectedTz = expectedTz;
+      this.client = HttpClient.newHttpClient();
     }
 
     @Override
@@ -46,7 +48,12 @@ public class TzDataConcurrentTest {
       System.out.println("Starting worker");
       for (double x = xstart; x < xstop; x += 0.1) {
         for (double y = ystart; y < ystop; y += 0.1) {
-          result = service.path(String.valueOf(x)).path(String.valueOf(y)).get(String.class);
+          HttpRequest request = HttpRequest.newBuilder(
+              new URI(String.format("http://localhost:28100/tz/bylonlat/%f/%f", x, y)))
+              .GET()
+              .build();
+          result = client.send(request, BodyHandlers.ofString()).body();
+          
           if (!expectedTz.equals(result)) {
             System.out.printf("Worker failed with result '%s' at (%.5f, %.5f)%n", result, x, y);
             return result;
@@ -56,13 +63,6 @@ public class TzDataConcurrentTest {
       System.out.println("Worker success with result " + result);
       return result;
     }
-  }
-
-  private static WebResource service;;
-
-  @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
-    service = Client.create().resource("http://localhost:28100/tz/bylonlat");
   }
 
   @Test

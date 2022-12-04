@@ -18,19 +18,19 @@ import org.geotools.data.shapefile.ShapefileDataStoreFactory;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureSource;
 import org.geotools.factory.CommonFactoryFinder;
-import org.geotools.factory.GeoTools;
+import org.geotools.util.factory.GeoTools;
 import org.geotools.feature.FeatureIterator;
 import org.geotools.geometry.jts.JTSFactoryFinder;
+import org.locationtech.jts.geom.Geometry;
 import org.opengis.feature.simple.SimpleFeature;
 import org.opengis.feature.simple.SimpleFeatureType;
 import org.opengis.feature.type.AttributeDescriptor;
 import org.opengis.filter.Filter;
 import org.opengis.filter.FilterFactory2;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.geom.GeometryFactory;
-import com.vividsolutions.jts.geom.Point;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 
 /**
  * Get the timezone of a given coordinate by using the timezone shapefile
@@ -58,7 +58,7 @@ public class TzDataShpFileReadAndLocate {
     // Download from http://efele.net/maps/tz/world/tz_world.zip (old style)
     // or https://github.com/evansiroky/timezone-boundary-builder/releases (new
     // style)
-    final String shpfile = System.getProperty("user.home") + "/projects/tz/dist/combined_shapefile.shp";
+    final String shpfile = System.getProperty("user.home") + "/projects/tz/dist/combined-shapefile-with-oceans.shp";
     TzDataShpFileReadAndLocate readAndLocate = new TzDataShpFileReadAndLocate();
 
     readAndLocate.openInputShapefile(shpfile);

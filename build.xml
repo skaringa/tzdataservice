@@ -38,11 +38,11 @@
   <target name="compile" depends="init, resolve" description="compile">
     <javac srcdir="${src.dir}"
            destdir="${build.dir}"
-           target="1.7"
+           target="1.8"
            fork="true"
            includeantruntime="false"
            classpathref="compile.classpath"
-           nowarn="true"
+           nowarn="false"
            debug="false"
            encoding="UTF-8" />
   </target>
@@ -53,7 +53,7 @@
              <attribute name="Main-Class" value="${main.class}"/>
          </manifest>
          <fileset dir="${build.dir}"/>
-         <zipgroupfileset dir="${lib.dir}" includes="*.jar"/>
+         <zipgroupfileset dir="${lib.dir}" includes="*.jar" excludes="org.eclipse*"/>
      </jar>
   </target>
 </project>

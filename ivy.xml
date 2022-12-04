@@ -7,8 +7,6 @@
         <conf name="runtime" visibility="public"/>
     </configurations>
     <dependencies>
-        <dependency org="org.geotools" name="gt-shapefile" rev="14.1"/>
-        <dependency org="com.sun.jersey" name="jersey-bundle" rev="1.19" conf="master"/>
-        <dependency org="javax.ws.rs" name="jsr311-api" rev="1.1.1" conf="master"/>
+        <dependency org="org.geotools" name="gt-shapefile" rev="28.0"/>
     </dependencies>
 </ivy-module>

@@ -4,11 +4,14 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
 
 /**
  * REST client to determine timezone ids from lat/lon pairs by asking
@@ -21,7 +24,7 @@ public class TzDataClient {
    * @param args
    * @throws IOException
    */
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws Exception {
     TzDataClient tzDataClient = new TzDataClient();
 
     BufferedReader reader;
@@ -46,13 +49,18 @@ public class TzDataClient {
     reader.close();
   }
 
-  private WebResource service;
+  private HttpClient client;
 
   public TzDataClient() {
-    service = Client.create().resource("http://localhost:28100/tz/bylonlat");
+    client = HttpClient.newHttpClient();
   }
 
-  public String process(String lon, String lat) {
-    return service.path(lon).path(lat).get(String.class);
+  public String process(String lon, String lat) throws URISyntaxException, IOException, InterruptedException {
+    HttpRequest request = HttpRequest.newBuilder(
+        new URI(String.format("http://localhost:28100/tz/bylonlat/%s/%s", lon, lat)))
+        .GET()
+        .build();
+    HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+    return response.body();
   }
 }

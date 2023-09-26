@@ -33,7 +33,7 @@ E.g. with curl:
 More information
 ----------------        
 
-The blog post [Determine time zone with GeoTools from shapefiles](https://www.mkompf.com/java/tzdata.html) explains the background and implementation of the program. It is also available in German language: [Zeitzone mit Geotools aus Shapefiles bestimmen](https://www.kompf.de/java/tzdata.html).
+The blog post [Determine time zone with GeoTools from shapefiles](https://en.kompf.de/java/tzdata.html) explains the background and implementation of the program. It is also available in German language: [Zeitzone mit Geotools aus Shapefiles bestimmen](https://www.kompf.de/java/tzdata.html).
 
 
 License
